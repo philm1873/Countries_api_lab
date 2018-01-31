@@ -20,6 +20,10 @@ select{
   align-content: center;
 }
 
+p{
+  color: red;
+}
+
 div{
   background-color: black;
   align-self: center;
