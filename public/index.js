@@ -14,11 +14,27 @@ var makeRequest = function(url, callback) {
 //   })
 // }
 
+var displayInfo = function(){
+  var country = countries[this.value];
+  var ul = document.querySelector('#country-info');
+  ul.innerHTML = ""
+  var li1 = document.createElement('li');
+  var li2 = document.createElement('li');
+  var li3 = document.createElement('li');
+  li1.innerText = country.name;
+  li2.innerText = country.population;
+  li3.innerText = country.capital;
+  ul.appendChild(li1);
+  ul.appendChild(li2);
+  ul.appendChild(li3);
+}
+
 var populateSelectBox = function(countries) {
   var selectBox = document.querySelector('#countries-dropdown');
-  countries.forEach(function(country) {
+  countries.forEach(function(country, index) {
     var option = document.createElement('option');
     option.innerText = country.name;
+    option.value = index;
     selectBox.appendChild(option);
   })
 }
@@ -29,7 +45,7 @@ var requestComplete = function() {
     return;
   }
   var jsonString = this.responseText;
-  var countries = JSON.parse(jsonString);
+  countries = JSON.parse(jsonString);
   // populateList(countries);
   populateSelectBox(countries);
 };
@@ -42,6 +58,8 @@ var requestComplete = function() {
 var app = function() {
   var url = 'https://restcountries.eu/rest/v2';
   makeRequest(url, requestComplete);
+  var selection = document.querySelector('#countries-dropdown');
+  selection.addEventListener('change', displayInfo);
 };
 
 window.addEventListener('load', app);
