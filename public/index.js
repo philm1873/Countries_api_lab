@@ -27,6 +27,8 @@ var displayInfo = function(){
   ul.appendChild(li1);
   ul.appendChild(li2);
   ul.appendChild(li3);
+  jsonString = JSON.stringify(country);
+  localStorage.setItem('country', jsonString);
 }
 
 var populateSelectBox = function(countries) {
