@@ -5,15 +5,6 @@ var makeRequest = function(url, callback) {
   request.send();
 };
 
-// var populateList = function(countries) {
-//   var ul = document.querySelector('#country-list');
-//   countries.forEach(function(country) {
-//     var li = document.createElement('li');
-//     li.innerText = country.name;
-//     ul.appendChild(li);
-//   })
-// }
-
 var getCountries = function() {
   jsonString = localStorage.getItem('countries');
   countries = JSON.parse(jsonString);
@@ -23,7 +14,6 @@ var getCountries = function() {
 var getCountryByAlphaCode = function(alphaCode) {
   countries = getCountries();
   var countryArray = countries.filter(country => country.alpha3Code === alphaCode)
-  console.log(countryArray);
   return countryArray[0];
 }
 
@@ -38,9 +28,14 @@ var getNeighbouringCountries = function(country) {
 }
 
 var displayNeighbouringCountriesInfo = function(array) {
-  ul = document.querySelector('#neighbouring-countries');
-  ul.innerHTML = ""
+  container = document.querySelector('#neighbouring-countries');
+  container.innerHTML = ""
+  var p = document.createElement('p');
+  p.innerText = "Neighbours";
+  container.appendChild(p);
   array.forEach(function(country) {
+    var ul = document.createElement('ul');
+    container.appendChild(ul);
     var li1 = document.createElement('li');
     var li2 = document.createElement('li');
     var li3 = document.createElement('li');
@@ -105,7 +100,6 @@ var app = function() {
   makeRequest(url, requestComplete);
   var selection = document.querySelector('#countries-dropdown');
   selection.addEventListener('change', displayInfo);
-  console.log(getCountryByAlphaCode("FRA"));
 };
 
 window.addEventListener('load', app);

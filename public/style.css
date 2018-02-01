@@ -22,7 +22,11 @@ h1{
   align-items: center;
 }
 
-body{
+p{
+  color: red;
+}
+
+div{
   background-color: black;
 }
 
