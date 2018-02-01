@@ -14,19 +14,61 @@ var makeRequest = function(url, callback) {
 //   })
 // }
 
+var getCountries = function() {
+  jsonString = localStorage.getItem('countries');
+  countries = JSON.parse(jsonString);
+  return countries;
+}
+
+var getCountryByAlphaCode = function(alphaCode) {
+  countries = getCountries();
+  var countryArray = countries.filter(country => country.alpha3Code === alphaCode)
+  console.log(countryArray);
+  return countryArray[0];
+}
+
+var getNeighbouringCountries = function(country) {
+  var neighbouringCountries = country.borders;
+  var neighbouringCountriesArray = [];
+  neighbouringCountries.forEach(function(countryCode) {
+    var country = getCountryByAlphaCode(countryCode);
+    neighbouringCountriesArray.push(country);
+  })
+  return neighbouringCountriesArray;
+}
+
+var displayNeighbouringCountriesInfo = function(array) {
+  ul = document.querySelector('#neighbouring-countries');
+  ul.innerHTML = ""
+  array.forEach(function(country) {
+    var li1 = document.createElement('li');
+    var li2 = document.createElement('li');
+    var li3 = document.createElement('li');
+    li1.innerText = "Name: " + country.name;
+    li2.innerText = "Population: " + country.population;
+    li3.innerText = "Capital City: " + country.capital;
+    ul.appendChild(li1);
+    ul.appendChild(li2);
+    ul.appendChild(li3);
+  })
+}
+
 var displayInfo = function(){
-  var country = countries[this.value];
+  countries = getCountries();
+  country = countries[this.value];
   var ul = document.querySelector('#country-info');
   ul.innerHTML = ""
   var li1 = document.createElement('li');
   var li2 = document.createElement('li');
   var li3 = document.createElement('li');
-  li1.innerText = country.name;
-  li2.innerText = country.population;
-  li3.innerText = country.capital;
+  li1.innerText = "Name: " + country.name;
+  li2.innerText = "Population: " + country.population;
+  li3.innerText = "Capital City: " + country.capital;
   ul.appendChild(li1);
   ul.appendChild(li2);
   ul.appendChild(li3);
+  array = getNeighbouringCountries(country);
+  displayNeighbouringCountriesInfo(array);
   jsonString = JSON.stringify(country);
   localStorage.setItem('country', jsonString);
 }
@@ -46,8 +88,9 @@ var requestComplete = function() {
   if (this.status !== 200) {
     return;
   }
+  localStorage.setItem('countries', this.responseText)
   var jsonString = this.responseText;
-  countries = JSON.parse(jsonString);
+  var countries = JSON.parse(jsonString);
   // populateList(countries);
   populateSelectBox(countries);
 };
@@ -62,6 +105,7 @@ var app = function() {
   makeRequest(url, requestComplete);
   var selection = document.querySelector('#countries-dropdown');
   selection.addEventListener('change', displayInfo);
+  console.log(getCountryByAlphaCode("FRA"));
 };
 
 window.addEventListener('load', app);
